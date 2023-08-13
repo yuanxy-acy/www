@@ -1,1 +1,118 @@
-
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>晓月的奶茶店</title>
+		<link rel="stylesheet" type="text/css" href="def.css"/>
+		<style>
+			#background{
+				background-size: cover;
+				background-position: center;
+				position: fixed;
+				top: 0;
+				left: 0;
+				height: 100vh;
+				width: 100vw;
+				z-index: -2;
+			}
+			#background:before{
+				display: block;
+				height: 100%;
+				width: 100%;
+				content: "";
+				position: absolute;
+				background-color: rgba(156, 156, 156, 0.4);
+			}
+			header{
+				position: relative;
+				top: 0;
+				left: 0;
+				height: 100vh;
+				width: 100vw;
+			}
+			nav{
+				position: sticky;
+				top: 0px;
+				height: 60px;
+			}
+			.nav{
+				position: absolute;
+				top: 0px;
+				height: 100%;
+				width: 100%;
+				background-color: rgba(255, 255, 255, 0.8);
+			}
+			.bg-cover{
+				height: 100vh;
+				width: 100%;
+				background-color: rgba(156, 156, 156, 0.4);
+			}
+			article{
+				position: relative;
+				top: 0;
+			}
+			article div{
+				height: 420px;
+				width: 60vw;
+				margin-top: 40px;
+				position: relative;
+				left: 20vw;
+				opacity: 0.8;
+				border-radius: 40px;
+				background-color: rgba(255, 255, 255, 0.8);
+			}
+			footer{
+				position: relative;
+				margin-top: 40px;
+				height: 300px;
+				width: 100vw;
+				background-color: rgba(255, 255, 255, 0.8);
+			}
+			@media screen and (min-width: 1450px) {
+			  article div{
+			    width: 870px;
+				left: calc(50vw - 435px);
+			  }
+			}
+		</style>
+		<script src="https://cdn.staticfile.org/jquery/3.6.3/jquery.min.js"></script>
+		<script>
+			var backgeoundUrls;
+			var site;
+			function bgchange(){
+				url = "url("+backgeoundUrls[Math.floor(Math.random()*backgeoundUrls.length)]+")";
+				$("#background").css("background-image",url);
+			}
+			$((e)=>{
+				$.getJSON("data/site.json",(g)=>{
+					site = g;
+					for(var i=0;i<site.article.show;i++){
+						var box = $("<div id=article"+(site.article.count-i)+"></div>");
+						$.getJSON("article/"+(site.article.count-i)+".json",(g)=>{
+							$("#article"+g.code).append("<a href='article.html?code="+g.code+"'>"+g.title+"</a>\
+							<p>"+g.synopsis+"</p><img src="+g.cover_url+"/>");
+							if((site.article.count-g.code)%2==0){
+								$("img",$("#article"+g.code)).css("float","right");
+							}
+						});
+						$("article").append(box);
+					}
+				});
+				$.getJSON("data/background.json",(g)=>{
+					backgeoundUrls = g;
+					bgchange();
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<div id="background"></div>
+		<header></header>
+		<nav>
+			<div class="bg-cover"></div>
+			<div class="nav"></div>
+		</nav>
+		<article></article>
+		<footer></footer>
+	</body>
+</html>
